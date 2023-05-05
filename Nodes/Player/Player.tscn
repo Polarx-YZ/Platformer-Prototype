@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://3bm336pia11d"]
+
+[ext_resource type="Script" path="res://Nodes/Player/Player.gd" id="1_upcmu"]
+[ext_resource type="Script" path="res://Nodes/Player/Camera.gd" id="2_i7kas"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_otfan"]
+size = Vector2(60, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fx8h3"]
+size = Vector2(34, 5)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_8knmm"]
+polygon = PackedVector2Array(-30, -20, -22, 51, 22, 51, 30, -20, 0, -17)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_upcmu")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+script = ExtResource("2_i7kas")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(0, 51)
+scale = Vector2(2, 2)
+offset = Vector2(0, -23.2549)
+polygon = PackedVector2Array(-15, -12, 0, -11, 15, -12, 11, 23, -11, 23)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_otfan")
+
+[node name="GunPivot" type="Marker2D" parent="."]
+position = Vector2(0, 15)
+
+[node name="Polygon2D" type="Polygon2D" parent="GunPivot"]
+color = Color(0.247059, 0.0470588, 0.505882, 1)
+polygon = PackedVector2Array(17, -1, 58, -1, 58, 0, 59, 0, 59, 3, 58, 3, 58, 4, 54, 6, 40, 6, 38, 4, 23.2715, 4, 17, 6, 17, 11, 10, 11, 10, 7, 7, -1, 11, -2)
+
+[node name="GunTip" type="Marker2D" parent="GunPivot"]
+position = Vector2(59, 2)
+
+[node name="GroundDetection" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundDetection"]
+position = Vector2(0, 52.5)
+shape = SubResource("RectangleShape2D_fx8h3")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_8knmm")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -104.0
+offset_right = 129.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer"]
+texture_filter = 1
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Move - WASD
+Jump - Space Bar
+Double Jump - Space Bar in air
+Dash - Shift
+Shoot - Left Click
+"
+
+[connection signal="body_shape_entered" from="GroundDetection" to="." method="_on_ground_detection_body_shape_entered"]
